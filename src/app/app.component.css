@@ -1,0 +1,43 @@
+nav{
+	z-index: 100;
+	position: fixed;
+	width: 100%;
+	min-height: 50px;
+	background-color: rgba(48,48,48,0.7);
+	top: 0;
+	left: 0;
+}
+nav div{
+	display: inline-block;
+}
+.sign{
+	position: absolute;
+	right: 0;
+}
+#signInBtn, #signOutBtn{
+	font-size: 1.2em;
+	padding: 5px 20px;
+	border-radius: 2px;
+	margin: 7px;
+	border: 1px solid #333;
+	color: #fff;
+	background-color: #111;
+	transition: 0.3s;
+}
+#signInBtn:hover, #signOutBtn:hover{
+	opacity: 1;
+	color: #fff;
+	background-color: #ef0a0a;
+	border: 1px solid #ef0a0a;
+}
+#signInBtn a{
+	text-decoration: none;
+}
+
+.warning{
+	background: #ef0a0a;
+}
+.success{
+	background: #2cb311;
+}
+

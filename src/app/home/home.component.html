@@ -1,0 +1,52 @@
+<div class="main" *ngIf="isUser; else home" >
+	<div class="calender">
+
+	</div>
+	<h1>
+	  Welcome to {{title}}!!
+	</h1>
+	<h3>{{ today }}</h3>
+	<div class="wrapper">
+		<div class="form"> 
+			<form  id="taskForm" #formCtrl="ngForm" (submit)="add($event)" >
+				<input #listInput type="text" [(ngModel)] ='listItem' name="listItem" 
+				placeholder="Add some task..." required />
+				<button type="submit" *ngIf="!update" class="add" [disabled]="!formCtrl.form.valid">Add</button>
+				<button type="button" *ngIf="update" class="add" (click)="updateTask(listInput.value)">Save</button>
+			</form>
+			
+		</div>
+		
+		<div class="list">
+			<div class="task" *ngFor = "let task of tasks">
+				<div>
+					<input type="checkbox" [checked]="task.completed" [value]="task.text" (click) = 'changeStatus(task)' >
+				</div>
+				<div>
+					<span> {{ task.text }} </span>
+				</div>
+				<div>
+					<button (click)="edit(task)" class="edit">Edit</button>
+				</div>
+				<div>
+					<button (click)="delete(task._id)" [disabled]="update" class="delete">Delete</button>
+				</div>
+				<!--<span class="time">{{ task.createTime }}</span>-->
+			</div>	
+			<div *ngIf="!update" >{{ listItem }}</div>
+		</div>
+	</div>
+	
+</div>
+
+<ng-template #home>
+	<div class="background"></div>
+	<div class="backgroundCover"></div>
+	<div class="quote">
+		<h1><i>"The way to get started is to quit talking and begin doing."</i></h1>
+		<a routerLink="/signUp"><button>Sign Up</button></a> 
+	</div>
+	<div class="cleanUp"></div>
+</ng-template>
+
+

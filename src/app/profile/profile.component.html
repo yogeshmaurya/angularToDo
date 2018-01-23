@@ -1,0 +1,25 @@
+<div  *ngIf="user !== undefined">
+	<div *ngIf="!editingName; else updateN">
+		<h2>{{user.name}} </h2>
+		<button (click)="changeName()">Change</button>
+	</div>
+	<ng-template #updateN>
+		<form [formGroup]="updateNameForm" (ngSubmit)="updateName(updateNameForm)">
+			<input type="text" value="{{user.name}}" formControlName="name" name="name">
+			<button [disabled]="!updateNameForm.valid" type="submit">Update</button>
+		</form>
+	</ng-template>
+	
+
+	<div *ngIf="!editingEmail; else updateE">
+		<h2>{{user.email}}</h2>
+		<button (click)="changeEmail()">Change</button>
+	</div>
+	<ng-template #updateE>
+		<form [formGroup]="updateEmailForm" (ngSubmit)="updateEmail(updateEmailForm)">
+			<input type="text" value="{{user.email}}" formControlEmail="email" name="email">
+			<button [disabled]="!updateEmailForm.valid" type="submit">Update</button>
+		</form>
+	</ng-template>
+</div>
+

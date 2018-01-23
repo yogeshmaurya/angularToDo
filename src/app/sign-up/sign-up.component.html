@@ -1,0 +1,38 @@
+<div class="background"></div>
+<div class="backgroundCover"></div>
+<div class="container">
+	<form id="signUpForm" [formGroup]="signUpForm" (ngSubmit)="register(signUpForm)">
+		<div>
+			<label for="name">Your Name</label>
+			<input type="text" formControlName="name" />
+			<div class="alert" *ngIf="!signUpForm.controls.name.valid && signUpForm.controls.name.touched">
+				{{requiredAlert}}
+			</div>
+		</div>
+		<div>
+			<label for="email">Email</label>
+			<input type="email" formControlName="email" />
+			<div class="alert" *ngIf="!signUpForm.controls.email.valid && signUpForm.controls.email.touched">
+				{{emailAlert}}
+			</div>
+		</div>
+		<div>
+			<label for="password">Password</label>
+			<input type="password" formControlName="password" />
+			<div class="alert" *ngIf="!signUpForm.controls.password.valid && signUpForm.controls.password.touched">
+				{{passwordAlert}}
+			</div>
+		</div>
+		<div>
+			<label for="confirmPassword">Confirm Password</label>
+			<input type="password" formControlName="confirmPassword" />
+			<div class="alert" *ngIf="!signUpForm.controls.confirmPassword.valid && signUpForm.controls.confirmPassword.touched">
+				{{confirmPasswordAlert}}
+			</div>
+		</div>
+		<div>
+			<button id="signUpBtn" [disabled]="!signUpForm.valid" type="submit">Sign Up</button>
+			<span>Already have an account? <a routerLink="/signIn">Sign In</a></span>
+		</div>
+	</form>
+</div>

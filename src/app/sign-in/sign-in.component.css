@@ -1,0 +1,78 @@
+.background{
+	background: url(/assets/images/signIn.jpeg); 
+	background-size: cover;
+	background-position: center;
+}
+.container > div{
+	width: 400px;
+	background: linear-gradient(to bottom, #727272, #999);
+	box-shadow: 2px 2px 10px #000;		
+}
+#signInForm > div{
+	margin: 0.5em;
+	padding: 0.5em;
+}
+#signInForm input{
+	background-color: #444;
+	border:none;
+	outline: none;
+	width: 100%;
+	color: #fff;
+	padding: 15px;
+	background: linear-gradient(to left, #555, #333);
+	margin-top: 0.8em;
+}
+#signInForm > div:nth-child(3){
+	display: grid;
+	grid-template-columns: 1fr 1fr; 
+}
+#signInBtn{
+	font-size: 1.2em;
+	padding: 5px 20px;
+	border-radius: 2px;
+	margin: 7px 0 7px 1.6em;
+	color: #fff;
+	background-color: #ef0a0a;
+	border: 1px solid #ef0a0a;
+}
+#signInBtn:disabled{
+	background: #e73e3e;
+	border: 1px solid #e73e3e;
+}
+#signInForm span{
+	display: inline-block;
+	color: #000;
+	margin: 0.5em 0;
+	padding: 0.5em 0;
+}
+span{
+	color: #000;
+}
+.extras{
+	padding: 1em;
+	margin: 1em 0;
+}
+.alert{
+	margin: 0.5em 0;
+	background: #ef0a0a;
+	color: #fff;
+	padding: 0.2em;
+	font-size: 0.9em;
+	animation: 1s alertAnim forwards;
+}
+
+@keyframes alertAnim {
+    from {
+        opacity:0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity:1;
+        transform: translateY(0);
+    }
+}
+@media screen and(max-width: 420px){
+	#signInForm{
+		width: 100%;	
+	}
+}

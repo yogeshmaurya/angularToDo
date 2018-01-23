@@ -1,0 +1,30 @@
+<div class="background"></div>
+<div class="backgroundCover"></div>
+<div class="container">
+	<div>
+		<form id="signInForm" [formGroup]="signInForm"  (ngSubmit)="signIn(signInForm)">
+			<div>
+				<label for="email">Email</label>
+				<input type="text" formControlName="email" name="email">
+				<div class="alert" *ngIf="!signInForm.controls.email.valid && signInForm.controls.email.touched">
+					{{emailAlert}}
+				</div>
+			</div>
+			<div>
+				<label for="password">Password</label>
+				<input type="password" formControlName="password" name="password">
+				<div class="alert" *ngIf="!signInForm.controls.password.valid && signInForm.controls.password.touched">
+					{{passwordAlert}}
+				</div>
+			</div>
+			<div>
+				<span><a routerLink="/forgetPassword">Forgot password?</a></span>
+				<button id="signInBtn" [disabled]="!signInForm.valid" type="submit">Sign In</button>
+			</div>
+		</form>	
+		<div class="extras">
+			<span>Don't have an account? <a routerLink="/signUp">Create One</a></span>
+		</div>
+	</div>
+	
+</div>
