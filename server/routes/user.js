@@ -17,11 +17,9 @@ const router 	= express.Router();
 router.post('/register', (request, response, next) => {
 	let data = request.body;
 	if(data.name !== undefined || data.email !== undefined || data.password !== undefined){
-		User.findOne({email: data.email}, (err, res) => {
+		User.findOne({email: data.email.toLowerCase()}, (err, res) => {
 			if(err) response.json({success: false, msg: err});
-			if(res) {
-				response.json({success: false ,msg: 'User already exists!!!!' });
-			};
+			if(res) response.json({success: false ,msg: 'User already exists!!!!' });
 			if(!res){
 				bcrypt.hash(data.password, 10, (error, hash) => {
 					bcrypt.hash(data.email, 10, (er, token) => {
@@ -29,20 +27,17 @@ router.post('/register', (request, response, next) => {
 							email: data.email.toLowerCase(),
 							password: hash,
 							creationTime: new Date(),
-							roll: 'user',
 							confirmEmailtoken: encodeURIComponent(token),
 							confirmEmailExpires: Date.now() + 1000 * 86400,
-							resetPasswordToken: null,
-							resetPasswordExpires: null
 						})
 						
 						newUser.save(newUser, (e, r) => {
 							if(e) throw e;
 							if(r){ 
-								const subject =  'Verify your email address'
-								const textMailContent = readFile('./server/mailTemplates/confirmEmail.txt');
-								const link = 'localhost:8080/api/user/confirmEmail?token=' + r.confirmEmailtoken
-								ejs.renderFile('./server/mailTemplates/confirmEmail.ejs',{Link: link}, function(err, htmlMailContent){
+								const subject =  'Verify your email address',
+									  textMailContent = readFile('./server/mailTemplates/confirmEmail.txt'),
+									  link = 'http://localhost:8080/api/user/confirmEmail?token=' + r.confirmEmailtoken;
+								ejs.renderFile('./server/mailTemplates/confirmEmail.ejs',{Link: link}, (err, htmlMailContent)=>{
 									sendEMail(r.email, subject, textMailContent, htmlMailContent);
 								});
 								const message = `${r.email} suceessfully registered, Please verify your email address to activate account.`
@@ -63,7 +58,7 @@ router.post('/register', (request, response, next) => {
 router.post('/signIn', (request, response, next) => {
 	const info = request.body;
 	if(info.email !== undefined || info.password !== undefined) {
-		User.findOne({email: info.email}, (error, result ) => {
+		User.findOne({email: info.email.toLowerCase()}, (error, result ) => {
 			if(error) response.json({success: false, msg: error});
 			if(!result){
 				response.json({success: false, msg: 'Incorrect email or password!!'});
@@ -90,17 +85,17 @@ router.post('/signIn', (request, response, next) => {
 							bcrypt.hash(result.email, 10, (err, hash) => {
 								if(err) throw err;
 								updateUser = {confirmEmailtoken: encodeURIComponent(hash), confirmEmailExpires: Date.now() + 1000*86400 }
-								User.update({email: result.email}, updateUser, (e, r) => {
+								User.findOneAndUpdate({email: result.email}, updateUser, (e, r) => {
 									if(e) throw e;
 									if(!r) { response.json({success: false, msg: 'Something went wrong!!'}) }
 									if(r) {
 										const subject =  'Verify your email address'
 										const textMailContent = readFile('./server/mailTemplates/confirmEmail.txt');
-										const link = 'localhost:8080/api/user/confirmEmail?token=' + encodeURIComponent(hash);
+										const link = 'http://localhost:8080/api/user/confirmEmail?token=' + encodeURIComponent(hash);
 										ejs.renderFile('./server/mailTemplates/confirmEmail.ejs',{Link: link}, (err, htmlMailContent)=>{
-											sendEMail(resultr.email, subject, textMailContent, htmlMailContent);
+											sendEMail(result.email, subject, textMailContent, htmlMailContent);
 										});
-										const message = `A email has been sent to ${resultr.email}, Please verify your email address to activate account.`
+										const message = `A email has been sent to ${result.email}, Please verify your email address to activate account.`
 										response.json({success: false, msg: message});
 									}
 								});
@@ -126,7 +121,7 @@ router.get('/confirmEmail', (request,response,next) => {
 			User.update({_id: result._id},{confirmEmailtoken: null, confirmEmailExpires: null, emailVerified: true}, (err, res) => {
 				if(err) throw err;
 				if(res.nModified !== 0){
-					let link = 'localhost:4200';
+					let link = 'http://localhost:4200';
 					ejs.renderFile('./server/Templates/emailVerified.ejs',{Link: link}, (e, renderedContent)=>{
 						response.send(renderedContent);
 					}); 
@@ -155,7 +150,7 @@ router.put('/forgetPassword', (request, response, next) => {
 						if(r.nModified !== 0) {
 							const subject =  'Reset password.';
 							const textMailContent = readFile('./server/mailTemplates/resetPassword.txt');
-							const link = 'localhost:8080/api/user/resetPassword/' + encodeURIComponent(hash);
+							const link = 'http://localhost:8080/api/user/resetPassword/' + encodeURIComponent(hash);
 							ejs.renderFile('./server/mailTemplates/resetPassword.ejs',{Link: link}, function(err, htmlMailContent){
 								sendEMail(result.email, subject, textMailContent, htmlMailContent);
 							});
@@ -180,7 +175,7 @@ router.get('/resetPassword/:token', (request, response, next) => {
 			response.sendFile(path.resolve('./server/Templates/linkInvalid.html'));
 		}
 		if(result){
-			let link = 'localhost:8080'+ request.originalUrl;
+			let link = 'http://localhost:8080'+ request.originalUrl;
 			ejs.renderFile('./server/Templates/resetPassword.ejs',{Link: link}, (err, renderedContent)=>{
 				response.send(renderedContent);
 			});
@@ -210,7 +205,7 @@ router.post('/resetPassword/:token', (request, response, next) => {
 								ejs.renderFile('./server/mailTemplates/passwordChanged.ejs',{email: email}, function(err, htmlMailContent){
 									sendEMail(email, subject, textMailContent, htmlMailContent);
 								});
-								ejs.renderFile('./server/Templates/passwordChanged.ejs',{email: email, link: 'localhost:4200'}, function(err, renderedContent){
+								ejs.renderFile('./server/Templates/passwordChanged.ejs',{email: email, link: 'http://localhost:4200'}, function(err, renderedContent){
 									response.send(renderedContent);
 								});
 							}
@@ -238,6 +233,50 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), (reques
 	}
 	if(!user){
 		response.json({success: false});
+	}
+});
+
+//Update profile
+router.post('/update/:fieldName', passport.authenticate('jwt', { session: false }), (request,response,next) => {
+	fieldName = request.params.fieldName;
+	if(request.user != undefined){
+		if(fieldName === 'email'){
+			bcrypt.hash(request.body.email, 10, (error, hash)=>{
+				let updateData = {emailVerified:false, confirmEmailtoken: encodeURIComponent(hash), confirmEmailExpires: Date.now() +1000*86400}; 
+				updateData[fieldName] = request.body.email;
+				User.findOneAndUpdate({_id: request.user._id}, updateData, (err ,res) =>{
+					if(err) throw err;
+					if(res){
+						const subject =  'Verify your email address';
+						const textMailContent = readFile('./server/mailTemplates/confirmEmail.txt');
+						const link = 'http://localhost:8080/api/user/confirmEmail?token=' + encodeURIComponent(hash);
+						ejs.renderFile('./server/mailTemplates/confirmEmail.ejs',{Link: link}, (err, htmlMailContent)=>{
+							sendEMail(request.body.email, subject, textMailContent, htmlMailContent);
+						});
+						response.json({success: true, msg:`${fieldName} successfully updated. Confirm email address to activate account .`});
+					}
+					if(!res){
+						response.json({success: false, msg: `Something went wrong.`});
+					}
+				});		
+			})	
+		}
+		else{
+			let updateData = {}; 
+			updateData[fieldName] = request.body[fieldName];
+			User.findOneAndUpdate({_id: request.user._id}, updateData, (err ,res) =>{
+				if(err) throw err;
+				if(res){
+					response.json({success: true, msg: `${fieldName} successfully updated.`});
+				}
+				if(!res){
+					response.json({success: false, msg: `Something went wrong.`});
+				}
+			});
+		}
+	}
+	else{
+		response.json({success: false, msg: `Something went wrong.`});
 	}
 });
 

@@ -1,25 +1,31 @@
-<div  *ngIf="user !== undefined">
-	<div *ngIf="!editingName; else updateN">
-		<h2>{{user.name}} </h2>
+<div class="profile" *ngIf="user.id !== undefined">
+	<label>Name</label>
+	<div class="div" *ngIf="!editingName; else updateN">
+		<h4>{{user.name}} </h4>
 		<button (click)="changeName()">Change</button>
 	</div>
 	<ng-template #updateN>
-		<form [formGroup]="updateNameForm" (ngSubmit)="updateName(updateNameForm)">
+		<form  class="div" [formGroup]="updateNameForm" (ngSubmit)="updateName(updateNameForm._value)">
 			<input type="text" value="{{user.name}}" formControlName="name" name="name">
 			<button [disabled]="!updateNameForm.valid" type="submit">Update</button>
+			<button type="button" (click)="this.editingName = false" >Cancel</button>
 		</form>
 	</ng-template>
-	
-
-	<div *ngIf="!editingEmail; else updateE">
-		<h2>{{user.email}}</h2>
+	<hr>
+	<label>Email ID</label>
+	<div class="div" *ngIf="!editingEmail; else updateE">
+		<h4>{{user.email}}</h4>
 		<button (click)="changeEmail()">Change</button>
 	</div>
 	<ng-template #updateE>
-		<form [formGroup]="updateEmailForm" (ngSubmit)="updateEmail(updateEmailForm)">
-			<input type="text" value="{{user.email}}" formControlEmail="email" name="email">
+		<form class="div" [formGroup]="updateEmailForm" (ngSubmit)="updateEmail(updateEmailForm._value)">
+			<input type="text" value="{{user.email}}" formControlName="email" name="email">
 			<button [disabled]="!updateEmailForm.valid" type="submit">Update</button>
+			<button type="button" (click)="this.editingEmail = false" >Cancel</button>
 		</form>
+		<div class="warning">
+			<p>If you change your email address, you will be signed out automatically and you have to confirm your email account again!!</p>
+		</div>
 	</ng-template>
 </div>
 

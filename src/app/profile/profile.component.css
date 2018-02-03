@@ -1,6 +1,37 @@
 *{
 	background: #444;
 }
-div:nth-child(1){
-	margin-top: 50px;
+.profile{
+	padding-top: 50px;
+	min-height: 100vh;
+	width: 60%;
+	margin: auto;
+}
+.profile label{
+	color: #e7b4b4;
+	text-decoration: underline;
+	font-weight: bold;
+	margin-left:0.5em; 
+}
+.profile > .div{
+	padding: 0em 1em;
+	margin: 1em 0;
+}
+button:disabled{
+	background: #e73e3e;
+}
+button{
+	padding: 0.3em 0.5em;
+	border-radius: 2px;
+	color: #fff;
+	background-color: #ef0a0a;
+	border: none;
+	transition: 0.3s;
+	font-weight: bold;
+}
+hr{
+	border: 1px solid #333;
+}
+.warning{
+	text-align: center;
 }

@@ -22,7 +22,7 @@ export class AppComponent {
 		this.isUser = false;
 		this.userService.signOut()
 		this.router.navigate(['/signIn']);
-		this.flashMessagesService.show('Successfully logged out!', {timeout:5000, classes: ['message']});
+		this.flashMessagesService.show('Successfully logged out!', {timeout:3000, classes: ['message']});
 
 	}
 	

@@ -11,7 +11,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { HomeComponent } from './home/home.component';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, onlySignedInUsersGuard, NotSignedInUsersGuard } from './app-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
@@ -31,7 +31,12 @@ import { ProfileComponent } from './profile/profile.component';
 	FormsModule,
 	FlashMessagesModule,
   ],
-  providers: [DataService, UserService],
+  providers: [
+	  DataService, 
+	  UserService, 
+	  onlySignedInUsersGuard, 
+	  NotSignedInUsersGuard
+	],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

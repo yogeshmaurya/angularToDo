@@ -29,11 +29,11 @@ export class SignUpComponent implements OnInit {
 			.subscribe((response) => {
 				if(response.success){
 					this.router.navigate(['/']);
-					this.flashMessagesService.show(response.msg, {timeout:15000, classes: ['message']});
+					this.flashMessagesService.show(response.msg, {timeout:4000, classes: ['message']});
 				}
 				else{
 					this.router.navigate(['/signUp']);
-					this.flashMessagesService.show(response.msg,{timeout:5000, classes: ['message']});
+					this.flashMessagesService.show(response.msg,{timeout:4000, classes: ['message']});
 				}
 			});
 	};

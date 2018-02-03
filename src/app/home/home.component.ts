@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { DataService } from 'app/data.service';
 import { UserService } from 'app/user.service';
@@ -10,24 +10,26 @@ import { Task } from 'app/task'
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
 	title = 'Todo app';
-	tasks: Task[] = []; 
-	listItem: any;
-	today = new Date().toDateString();
-	update: boolean = false;
-	tempData: any = '';
-	status: string = '';
+	private tasks: Task[] = []; 
+	private listItem: any;
+	private today = new Date().toDateString();
+	private update: boolean = false;
+	private tempData: any = '';
+	private status: string = '';
+	public quote
 	public isUser: boolean;
+	public userInfo
 	
 	add (event) {
 		event.preventDefault();
 		let newTask = { 
 			text: this.listItem, 
-			completed: false, 
-			createTime: new Date(), 
-			updateTime: new Date()
+			creationTime: new Date(), 
+			updateTime: new Date(),
+			user: this.userInfo.id
 		};
 		this.dataService.addTask(newTask)
 			.subscribe(task => {
@@ -54,8 +56,9 @@ export class HomeComponent {
 			_id:task._id, 
 			text: task.text, 
 			completed: !task.completed, 
-			createTime: task.createTime,
-			updateTime: new Date() 
+			creationTime: task.creationTime,
+			updateTime: new Date(),
+			user: task.user 
 		}
 		this.dataService.updateTask(updatedStatusObj)
 			.subscribe( data => {
@@ -81,8 +84,9 @@ export class HomeComponent {
 			_id:oldTask._id, 
 			text: value, 
 			completed:oldTask.completed, 
-			createTime: oldTask.time,
-			updateTime: new Date()
+			creationTime: oldTask.creationTime,
+			updateTime: new Date(),
+			user: oldTask.user
 		}
 		
 		this.dataService.updateTask(updatedTaskObj)
@@ -101,14 +105,29 @@ export class HomeComponent {
 	}
 	
 	constructor(private dataService: DataService, private userService: UserService) {
-
+		
 	}
 	
   	ngOnInit(){
 		this.isUser = this.userService.isUserAuthenticated();
+		if(this.isUser){
+			this.dataService.getTasks()
+				.subscribe(response => { 
+					response.forEach(element => {
+						this.tasks.push(element)
+					});
+				})
+		}
+		this.userInfo = JSON.parse(this.userService.getUser());	
 		this.userService.getLoggedInEvent().subscribe( loginStatus => {
 			this.isUser = loginStatus;
 		});
+		this.dataService.getQuote()
+			.subscribe(response => {
+				if(response.success){
+					this.quote = response.quote;
+				}
+			})
 	}
 
 }

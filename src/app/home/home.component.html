@@ -1,11 +1,15 @@
 <div class="main" *ngIf="isUser; else home" >
+	<h3>{{ today }}</h3>
 	<div class="calender">
 
 	</div>
-	<h1>
-	  Welcome to {{title}}!!
-	</h1>
-	<h3>{{ today }}</h3>
+	<div class="homeQuote">
+		<h2>
+			<i>"{{ quote?.quote }}"</i>
+		</h2>
+		<h4>- {{ quote?.writer }}</h4>
+	</div>
+	
 	<div class="wrapper">
 		<div class="form"> 
 			<form  id="taskForm" #formCtrl="ngForm" (submit)="add($event)" >
@@ -14,16 +18,13 @@
 				<button type="submit" *ngIf="!update" class="add" [disabled]="!formCtrl.form.valid">Add</button>
 				<button type="button" *ngIf="update" class="add" (click)="updateTask(listInput.value)">Save</button>
 			</form>
-			
 		</div>
 		
 		<div class="list">
-			<div class="task" *ngFor = "let task of tasks">
+			<div class="task" [class.editing]="update" *ngFor = "let task of tasks">
 				<div>
-					<input type="checkbox" [checked]="task.completed" [value]="task.text" (click) = 'changeStatus(task)' >
-				</div>
-				<div>
-					<span> {{ task.text }} </span>
+					<input type="checkbox" id="{{task._id}}" [checked]="task.completed" [value]="task.text" (click) = 'changeStatus(task)' >
+					<label for="{{task._id}}"> {{ task.text }} </label>
 				</div>
 				<div>
 					<button (click)="edit(task)" class="edit">Edit</button>
@@ -36,7 +37,6 @@
 			<div *ngIf="!update" >{{ listItem }}</div>
 		</div>
 	</div>
-	
 </div>
 
 <ng-template #home>
@@ -46,7 +46,7 @@
 		<h1><i>"The way to get started is to quit talking and begin doing."</i></h1>
 		<a routerLink="/signUp"><button>Sign Up</button></a> 
 	</div>
-	<div class="cleanUp"></div>
+	<div class="coverSpace"></div>
 </ng-template>
 
 

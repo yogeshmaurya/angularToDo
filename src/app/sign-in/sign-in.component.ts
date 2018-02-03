@@ -23,11 +23,11 @@ export class SignInComponent implements OnInit {
 				if(response.success){
 					this.userService.storeUserData(response.token, response.user);
 					this.router.navigate(['/']);
-					this.flashMessagesService.show(response.msg, {timeout:5000, classes: ['message']});
+					this.flashMessagesService.show(response.msg, {timeout:3500, classes: ['message']});
 				}
 				else{
 					this.router.navigate(['/signIn']);
-					this.flashMessagesService.show(response.msg, {timeout:5000, classes: ['message']});
+					this.flashMessagesService.show(response.msg, {timeout:3500, classes: ['message']});
 				}
 			})
 	}

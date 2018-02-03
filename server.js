@@ -36,6 +36,7 @@ app.use(passport.session());
 
 require('./server/config/passport')(passport);
 
+app.use('/api/quote', api);
 app.use('/api/tasks', task);
 app.use('/api/user', user);
 

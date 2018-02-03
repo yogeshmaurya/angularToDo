@@ -7,7 +7,7 @@ export class UserService {
 	
 	private authenticated : boolean = false;
 	private authToken
-	private userInfo : object = {};	
+	private userInfo 
 	private loggedIn: EventEmitter<boolean> = new EventEmitter();
 	private host: string = 'http://localhost:8080';
 
@@ -49,8 +49,26 @@ export class UserService {
 	  	.map(res => res.json());
   }	
 
+  update(data){
+	let headers = new Headers;
+	headers.append('Authorization', this.loadToken());						
+	headers.append('Content-Type','application/json');
+	if(data.name){
+		return this.http.post(`${this.host}/api/user/update/name`, data ,{headers: headers})
+		.map(res => res.json());
+	}
+	if(data.email){
+		return this.http.post(`${this.host}/api/user/update/email`, data ,{headers: headers})
+		.map(res => res.json());
+	}
+  }
+
   loadToken(){
 	  return this.authToken = localStorage.getItem('id_token');
+  }
+
+  getUser() {
+	  return this.userInfo = localStorage.getItem('user');
   }
 
   isUserAuthenticated() {

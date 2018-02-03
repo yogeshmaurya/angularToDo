@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FlashMessagesService } from 'ngx-flash-messages';
 
 import { UserService } from 'app/user.service';
 
@@ -11,7 +12,7 @@ import { UserService } from 'app/user.service';
 })
 export class ProfileComponent implements OnInit {
 
-	user: Object;
+	user: any = {id:'', name: '', email: ''};
 	editingName: boolean = false;
 	editingEmail: boolean = false;
 	updateNameForm: FormGroup;
@@ -25,17 +26,31 @@ export class ProfileComponent implements OnInit {
 		this.editingEmail = true;
 	}
 
-	updateName(e) {
-		console.log(e);
-		this.editingName = false;
+	updateName(data) {
+		this.userService.update(data)
+			.subscribe((response) => {
+				if(response.success){
+					this.user.name = data.name;
+					this.flashMessagesService.show(response.msg, {timeout:3000, classes: ['message']});
+					this.editingName = false;
+				}
+			});
 	}
 
-	updateEmail(e) {
-		console.log(e);
-		this.editingEmail = false;
+	updateEmail(data) {
+		this.userService.update(data)
+			.subscribe((response) => {
+				if(response.success){
+					this.user.email = data.email;
+					this.flashMessagesService.show(response.msg, {timeout:3500, classes: ['message']});
+					this.userService.signOut()
+					this.router.navigate(['/signIn']);
+					this.editingEmail = false;
+				}
+			});
 	}
  
-  constructor(private userService: UserService, private router:Router, private fb: FormBuilder) {
+  constructor(private userService: UserService, private router:Router, private fb: FormBuilder, private flashMessagesService: FlashMessagesService) {
 		this.userService.getProfile()
 		.subscribe( response => {
 			if(response.success){
@@ -49,8 +64,7 @@ export class ProfileComponent implements OnInit {
 		})
 
 		this.updateEmailForm = fb.group({
-			'email': ['', Validators.compose([Validators.required,
-				Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])]
+			'email': ['', Validators.required]
 		})
    }
 
