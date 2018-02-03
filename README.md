@@ -1,10 +1,15 @@
-# AngularToDo
+# Mean ToDo app
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.0.
 
-## Development server
+## Important
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Change database address in file `server/config/config.js`. And
+Change nodemailer transport configurations in file `server/config/mail.js`
+
+## Important
+
+Run `ng serve` for front end and node `server.js` for backend server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
