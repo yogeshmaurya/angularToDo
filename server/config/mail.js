@@ -9,16 +9,16 @@ exports.readFile = function(path) {
 exports.sendEMail = function(emailID, subject, text, html ) {
 	
 	const transport = nodemailer.createTransport({
-		host: "smtp.mailtrap.io",
+		host: "host",
  		port: 2525,
  		auth: {
-    	user: "150e3002211631",
-		pass: "feb3c70070c7d5"
+    	user: "user",
+		pass: "password"
 		}
 	});
 
 	const mailOptions = {
-		from: 'yogeshmaurya10@gmail.com',
+		from: 'no_reply@meanapp.com',
 		to: emailID,
 		subject: subject,
 		text: text,
