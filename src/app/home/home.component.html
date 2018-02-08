@@ -3,7 +3,7 @@
 	<div class="calender">
 
 	</div>
-	<div class="homeQuote">
+	<div class="homeQuote" *ngIf="quote !== undefined">
 		<h2>
 			<i>"{{ quote?.quote }}"</i>
 		</h2>
